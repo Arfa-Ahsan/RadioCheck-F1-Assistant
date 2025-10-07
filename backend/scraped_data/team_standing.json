@@ -1,0 +1,52 @@
+[
+  {
+    "POS.": "1",
+    "TEAM": "McLaren",
+    "PTS.": "650"
+  },
+  {
+    "POS.": "2",
+    "TEAM": "Mercedes",
+    "PTS.": "325"
+  },
+  {
+    "POS.": "3",
+    "TEAM": "Ferrari",
+    "PTS.": "298"
+  },
+  {
+    "POS.": "4",
+    "TEAM": "Red Bull Racing",
+    "PTS.": "290"
+  },
+  {
+    "POS.": "5",
+    "TEAM": "Williams",
+    "PTS.": "102"
+  },
+  {
+    "POS.": "6",
+    "TEAM": "Racing Bulls",
+    "PTS.": "72"
+  },
+  {
+    "POS.": "7",
+    "TEAM": "Aston Martin",
+    "PTS.": "68"
+  },
+  {
+    "POS.": "8",
+    "TEAM": "Kick Sauber",
+    "PTS.": "55"
+  },
+  {
+    "POS.": "9",
+    "TEAM": "Haas",
+    "PTS.": "46"
+  },
+  {
+    "POS.": "10",
+    "TEAM": "Alpine",
+    "PTS.": "20"
+  }
+]

@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@keyframes ripple {
+  0% { box-shadow: 0 0 0 0 rgba(225,6,0, 0.4); }
+  70% { box-shadow: 0 0 0 12px rgba(225,6,0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(225,6,0, 0); }
+}
+
+.ripple-once {
+  animation: ripple 1.2s ease-out 1;
+}
