@@ -2,7 +2,7 @@
 
 **RadioCheck-F1-Assistant** is an AI-powered assistant that delivers real-time Formula 1 insights through natural conversation. Ask about driver and constructor standings, championship odds with Monte Carlo simulations, race weather forecasts, and watch official YouTube highlights—all presented in a clean, interactive interface. Built with React, Python agents powered by Google Gemini, and orchestrated through LangGraph, RadioCheck brings the paddock to your fingertips.
 
-![Formula 1 Chatbot](frontend/src/assets/singapore%20grand%20prix.jpg)
+<img width="1157" height="676" alt="image" src="https://github.com/user-attachments/assets/76c54157-caaa-45cf-af99-45a9ff07dae5" />
 
 ## ✨ Features
 
