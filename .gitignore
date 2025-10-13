@@ -1,5 +1,7 @@
 #virtual environment
 .venv/
+#secret key file
+.env
 # Python cache
 __pycache__/
 *.py[cod]
