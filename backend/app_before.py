@@ -5,12 +5,10 @@ from flask_cors import CORS
 from authlib.integrations.flask_client import OAuth
 from uuid import uuid4
 from dotenv import load_dotenv
-from datetime import datetime, timezone
+from datetime import datetime
 import os
 from werkzeug.utils import secure_filename
-from main import agent_executor, HumanMessage, AIMessage, memory
-from security.input_validator import validate_user_input
-from security.nosql_protection import protect_session_id, protect_user_id, sanitize_for_mongodb
+from main import agent_executor,HumanMessage,AIMessage
 
 # Load environment variables
 load_dotenv()
@@ -19,13 +17,17 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'supersecretkey')
 
+# Uploads config
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+ALLOWED_IMAGE_EXTENSIONS = {'.png', '.jpg', '.jpeg'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Database setup - MongoDB database: F1_chatbot
+# Database setup
 app.config["MONGO_URI"] = os.getenv("MONGO_URI")
 mongo = PyMongo(app)
-users = mongo.db.Users  # Collection for user profiles
-sessions = mongo.db.Sessions  # Collection for session metadata (title, visibility, ownership)
-# Note: Actual chat messages are stored by LangGraph in its checkpoint collection
+users = mongo.db.Users
+sessions= mongo.db.Sessions
 
 # Allow CORS (for frontend)
 CORS(app, supports_credentials=True)
@@ -56,13 +58,12 @@ app.config['SESSION_COOKIE_SECURE'] = os.getenv('SESSION_COOKIE_SECURE', 'False'
 
 # -------------------- ROUTES --------------------
 
-# Home endpoint - API health check
+
 @app.route("/")
 def home():
     return "🏁 Welcome to the Formula 1 Agent API!"
 
 
-# Initiate Google OAuth login flow
 @app.route('/google/')
 def google_login():
     """Redirect user to Google for authentication"""
@@ -74,7 +75,6 @@ def google_login():
     return google.authorize_redirect(redirect_uri, nonce=oidc_nonce,prompt="consent")
 
 
-# Handle Google OAuth callback and create user session
 @app.route('/google/auth/')
 def google_auth():
     """Handle Google callback and store user info, create a chat session and redirect to frontend"""
@@ -118,7 +118,7 @@ def google_auth():
             "user_id": str(uuid4()),
             "user_name": name,
             "email": email,
-            "created_at": datetime.now(timezone.utc),
+            "created_at": datetime.utcnow(),
             "photo_url": user_info.get('picture'),
             "favorite_driver": None,
             "favorite_team": None
@@ -140,16 +140,13 @@ def google_auth():
     return redirect(redirect_url)
 
 
-# Logout user and clear Flask session
 @app.route('/logout/')
 def logout():
     """Logout user"""
     session.pop('user', None)
     return jsonify({"message": "Logged out successfully."})
 
-
-# Create a new chat session
-# Returns: session_id for the frontend to use in subsequent chat API calls
+# Create a new session
 @app.route("/api/session", methods=["POST"])
 def create_session_api():
     session_id = str(uuid4())
@@ -160,7 +157,8 @@ def create_session_api():
 
     doc = {
         "_id": session_id,
-        "created_at": datetime.now(timezone.utc),
+        "created_at": datetime.utcnow(),
+        "messages": [],
         "visible": True
     }
     if owner_id:
@@ -169,10 +167,8 @@ def create_session_api():
     sessions.insert_one(doc)
     return jsonify({"session_id": session_id})
 
-
-# Send a message to the bot and get a response
-# This endpoint processes user queries using LangGraph agent executor
-# Messages are automatically stored in LangGraph's checkpoint (not in Sessions.messages)
+# Chat with the bot
+# Chat with the bot (API)
 @app.route("/api/chat", methods=["POST"])
 def chat_api():
     data = request.json
@@ -182,42 +178,41 @@ def chat_api():
     if not session_id or not query:
         return jsonify({"error": "session_id and query are required"}), 400
 
-    # Protect against NoSQL injection in session_id
-    is_valid_session, error_msg = protect_session_id(session_id)
-    if not is_valid_session:
-        return jsonify({"error": error_msg}), 400
-
-    # Validate and sanitize user input to prevent prompt injection attacks
-    is_valid, error_message, sanitized_query = validate_user_input(query)
-    if not is_valid:
-        return jsonify({"error": error_message}), 400
-
     s = sessions.find_one({"_id": session_id, "visible": True})
     if not s:
         return jsonify({"error": "Session does not exist. Please create a session first."}), 404
 
-    # Invoke agent with thread_id - LangGraph automatically:
-    # 1. Retrieves conversation history for this thread_id
-    # 2. Processes the new message with full context
-    # 3. Stores updated conversation in its checkpoint collection
-    # Use sanitized_query instead of raw query
     response = agent_executor.invoke(
-        {"messages": [HumanMessage(content=sanitized_query)]},
+        {"messages": [HumanMessage(content=query)]},
         config={"configurable": {"thread_id": session_id}}
     )
     agent_reply = response["messages"][-1].content
 
-    # Set session title from first user message (use sanitized query)
+    # Set title if not set yet
     if "title" not in s:
         sessions.update_one(
             {"_id": session_id},
-            {"$set": {"title": sanitized_query[:50]}}
+            {"$set": {"title": query[:50]}}  # limit length
         )
+
+    # Push both messages in one call
+    sessions.update_one(
+        {"_id": session_id},
+        {
+            "$push": {
+                "messages": {
+                    "$each": [
+                        {"role": "user", "content": query},
+                        {"role": "agent", "content": agent_reply}
+                    ]
+                }
+            }
+        }
+    )
 
     return jsonify({"response": agent_reply})
 
 
-# List all visible chat sessions for the current user
 @app.route("/api/sessions", methods=["GET"])
 def list_sessions_api():
     user = session.get('user')
@@ -239,9 +234,8 @@ def list_sessions_api():
 
     return jsonify(session_list)
 
-
-# Check if user is logged in and return user profile
-@app.route("/api/me/", methods=["GET"])
+# Who am I (login check)
+@app.route("/api/me/", methods=["GET"])  # allow trailing slash
 def me_api():
     user = session.get('user')
     if not user:
@@ -260,10 +254,12 @@ def me_api():
         }
     return jsonify({"logged_in": True, "user": profile or user}), 200
 
+# Static serving for uploaded files
+@app.route('/uploads/<path:filename>')
+def serve_upload(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-
-
-# Get current user's profile information
+# Get profile
 @app.route('/api/profile', methods=['GET'])
 def get_profile():
     user = session.get('user')
@@ -281,8 +277,7 @@ def get_profile():
         "favorite_team": db_user.get('favorite_team'),
     })
 
-
-# Update user profile (favorite driver and team)
+# Update profile (favorites only)
 @app.route('/api/profile', methods=['PUT'])
 def update_profile():
     user = session.get('user')
@@ -299,82 +294,38 @@ def update_profile():
     users.update_one({"user_id": user.get('user_id')}, {"$set": update})
     return jsonify({"message": "Profile updated"})
 
+# Upload profile photo
+@app.route('/api/profile/photo', methods=['POST'])
+def upload_profile_photo():
+    user = session.get('user')
+    if not user:
+        return jsonify({"error": "Unauthorized"}), 401
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+    f = request.files['file']
+    if f.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+    ext = os.path.splitext(f.filename)[1].lower()
+    if ext not in ALLOWED_IMAGE_EXTENSIONS:
+        return jsonify({"error": "Invalid file type. Allowed: png, jpg, jpeg"}), 400
+    fname = secure_filename(f"{user.get('user_id')}{ext}")
+    save_path = os.path.join(app.config['UPLOAD_FOLDER'], fname)
+    f.save(save_path)
+    public_url = url_for('serve_upload', filename=fname, _external=True)
+    users.update_one({"user_id": user.get('user_id')}, {"$set": {"photo_url": public_url}})
+    return jsonify({"photo_url": public_url})
 
-# Upload a new profile photo for the current user
-# DISABLED FOR SECURITY: Use Google profile photo instead
-# Allowing file uploads can pose security risks (malicious files, storage issues in production)
-# @app.route('/api/profile/photo', methods=['POST'])
-# def upload_profile_photo():
-#     user = session.get('user')
-#     if not user:
-#         return jsonify({"error": "Unauthorized"}), 401
-#     if 'file' not in request.files:
-#         return jsonify({"error": "No file part"}), 400
-#     f = request.files['file']
-#     if f.filename == '':
-#         return jsonify({"error": "No selected file"}), 400
-#     ext = os.path.splitext(f.filename)[1].lower()
-#     if ext not in ALLOWED_IMAGE_EXTENSIONS:
-#         return jsonify({"error": "Invalid file type. Allowed: png, jpg, jpeg"}), 400
-#     fname = secure_filename(f"{user.get('user_id')}{ext}")
-#     save_path = os.path.join(app.config['UPLOAD_FOLDER'], fname)
-#     f.save(save_path)
-#     public_url = url_for('serve_upload', filename=fname, _external=True)
-#     users.update_one({"user_id": user.get('user_id')}, {"$set": {"photo_url": public_url}})
-#     return jsonify({"photo_url": public_url})
-
-
-# Get message history of a specific session
-# Retrieves messages from LangGraph's checkpoint storage
+# Get message history of a session
 @app.route("/api/session/<session_id>", methods=["GET"])
 def get_history_api(session_id):
-    # Protect against NoSQL injection in session_id
-    is_valid_session, error_msg = protect_session_id(session_id)
-    if not is_valid_session:
-        return jsonify({"error": error_msg}), 400
-    
     s = sessions.find_one({"_id": session_id, "visible": True})
     if not s:
         return jsonify({"error": "Session not found"}), 404
-    
-    # Retrieve messages from LangGraph's checkpoint using get_state()
-    config = {"configurable": {"thread_id": session_id}}
-    try:
-        state = agent_executor.get_state(config)
-        messages = []
-        
-        if state and hasattr(state, 'values') and 'messages' in state.values:
-            for msg in state.values['messages']:
-                # Determine role based on message type
-                if isinstance(msg, HumanMessage):
-                    role = "user"
-                elif isinstance(msg, AIMessage):
-                    role = "assistant"
-                else:
-                    # Skip other message types (ToolMessage, SystemMessage, etc.)
-                    continue
-                
-                messages.append({
-                    "role": role,
-                    "content": msg.content
-                })
-        
-        return jsonify({"messages": messages})
-    except Exception as e:
-        print(f"Error retrieving messages from checkpoint: {e}")
-        import traceback
-        print(traceback.format_exc())
-        return jsonify({"messages": []})
+    return jsonify({"messages": s["messages"]})
 
-
-# Soft delete a session (mark as invisible)
+# Delete a session
 @app.route("/api/session/<session_id>", methods=["DELETE"])
 def delete_session_api(session_id):
-    # Protect against NoSQL injection in session_id
-    is_valid_session, error_msg = protect_session_id(session_id)
-    if not is_valid_session:
-        return jsonify({"error": error_msg}), 400
-    
     result = sessions.update_one({"_id": session_id}, {"$set": {"visible": False}})
 
     if result.matched_count > 0:
@@ -382,42 +333,26 @@ def delete_session_api(session_id):
     else:
         return jsonify({"error": "Session not found."}), 404
 
-
-# Check if a session exists (debug endpoint)
 @app.route("/api/check_session/<session_id>", methods=["GET"])
 def check_session_api(session_id):
-    # Protect against NoSQL injection in session_id
-    is_valid_session, error_msg = protect_session_id(session_id)
-    if not is_valid_session:
-        return jsonify({"error": error_msg}), 400
-    
     s = sessions.find_one({"_id": session_id})
     if s:
         return jsonify({"found": True, "session": s})
     else:
         return jsonify({"found": False, "message": "Session not found"})
-
-
-# Rename a chat session
+    
+# Rename a session
 @app.route("/api/session/<session_id>/rename", methods=["PUT"])
 def rename_session_api(session_id):
-    # Protect against NoSQL injection in session_id
-    is_valid_session, error_msg = protect_session_id(session_id)
-    if not is_valid_session:
-        return jsonify({"error": error_msg}), 400
-    
     data = request.json
     new_title = data.get("title", "").strip()
 
     if not new_title:
         return jsonify({"error": "New title is required"}), 400
 
-    # Sanitize the new title to prevent NoSQL injection
-    sanitized_title = sanitize_for_mongodb(new_title)
-
     result = sessions.update_one(
         {"_id": session_id},
-        {"$set": {"title": sanitized_title[:50]}}  # Limit length
+        {"$set": {"title": new_title[:50]}}  # Limit length
     )
 
     if result.modified_count == 1:

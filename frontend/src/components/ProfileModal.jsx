@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
 import { theme } from '../theme'
-import { getProfile, updateProfile, uploadProfilePhoto } from '../api/chatApi'
+import { getProfile, updateProfile } from '../api/chatApi'
 
 export default function ProfileModal({ open, onClose }) {
   const [profile, setProfile] = useState(null)
   const [favoriteDriver, setFavoriteDriver] = useState('')
   const [favoriteTeam, setFavoriteTeam] = useState('')
-  const [uploading, setUploading] = useState(false)
 
   const drivers = [
     'Max Verstappen',
@@ -60,23 +59,6 @@ export default function ProfileModal({ open, onClose }) {
     onClose(true)
   }
 
-  async function handleFileChange(e) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const allowed = ['image/png', 'image/jpeg', 'image/jpg']
-    if (!allowed.includes(file.type)) {
-      alert('Only PNG, JPG, JPEG allowed')
-      return
-    }
-    setUploading(true)
-    try {
-      const res = await uploadProfilePhoto(file)
-      setProfile((prev) => ({ ...prev, photo_url: res.photo_url }))
-    } finally {
-      setUploading(false)
-    }
-  }
-
   if (!open) return null
 
   return (
@@ -101,10 +83,9 @@ export default function ProfileModal({ open, onClose }) {
                   </span>
                 )}
               </div>
-              <label className="px-4 py-2 rounded-md cursor-pointer" style={{ background: theme.colors.primary, color: '#000000' }}>
-                {uploading ? 'Uploading…' : 'Upload Photo'}
-                <input type="file" accept="image/png,image/jpeg" className="hidden" onChange={handleFileChange} disabled={uploading} />
-              </label>
+              <div className="text-xs text-center px-2" style={{ color: theme.colors.subtext }}>
+                Profile photo from Google account
+              </div>
             </div>
             <div className="md:col-span-2 space-y-3">
               <div>

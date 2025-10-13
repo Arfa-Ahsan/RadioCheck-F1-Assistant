@@ -1,72 +1,8 @@
 
 import { useState, useEffect } from 'react';
-
-// Inline SVG icon components (small, dependency-free)
-const MessageSquare = ({ className = '', ...props }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-  </svg>
-);
-
-const Search = ({ className = '', ...props }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <circle cx="11" cy="11" r="7" />
-    <path d="M21 21l-4.35-4.35" />
-  </svg>
-);
-
-const Youtube = ({ className = '', ...props }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <rect x="2" y="6" width="20" height="12" rx="3" fill="currentColor" />
-    <polygon points="10,8 16,12 10,16" fill="#fff" />
-  </svg>
-);
-
-const Cloud = ({ className = '', ...props }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M20 17.58A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 4 16.25" />
-  </svg>
-);
-
-const Trophy = ({ className = '', ...props }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M8 3h8v4a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4V3z" />
-    <path d="M3 7h3" />
-    <path d="M18 7h3" />
-    <path d="M9 21h6" />
-  </svg>
-);
-
-const Calculator = ({ className = '', ...props }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <rect x="3" y="2" width="18" height="20" rx="2" />
-    <path d="M7 7h10" />
-    <path d="M7 12h2" />
-    <path d="M11 12h2" />
-    <path d="M15 12h2" />
-    <path d="M7 16h2" />
-    <path d="M11 16h2" />
-  </svg>
-);
-
-const ChevronRight = ({ className = '', ...props }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <polyline points="9 18 15 12 9 6" />
-  </svg>
-);
-
-const Sparkles = ({ className = '', ...props }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M12 3l1.5 3.5L17 8l-3.5 1.5L12 13l-1.5-3.5L7 8l3.5-1.5L12 3z" />
-    <path d="M5 21l.8-1.8L7.6 18l-1.8-.8L5 15l-.8 1.8L2.4 18l1.8.8L5 21z" />
-  </svg>
-);
-
-const Zap = ({ className = '', ...props }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M13 2L3 14h9l-1 8L21 10h-9l1-8z" />
-  </svg>
-);
+import ToolInfoCard from './ToolInfoCard';
+import { TOOLS } from '../data/ToolsData';
+import { ChevronRight, Sparkles, Zap } from './Icons';
 
 // radioCheckBot removed from landing hero; still available for chat avatar elsewhere
 const sgPhoto = new URL('../assets/singapore grand prix.jpg', import.meta.url).href
@@ -95,42 +31,10 @@ const TEAMS = [
   { name: 'Haas', color: '#FFFFFF', logo: 'https://media.formula1.com/content/dam/fom-website/teams/2024/haas.png' }
 ];
 
-const TOOLS = [
-  { 
-    icon: Search, 
-    title: 'Web Search', 
-    desc: 'Retrieve the latest F1 news, driver stats, and authoritative season data.',
-    gradient: 'from-blue-500 to-cyan-500'
-  },
-  { 
-    icon: Youtube, 
-    title: 'YouTube Highlights', 
-    desc: 'Fetch official highlights for races — specify a year or get the latest.',
-    gradient: 'from-red-500 to-pink-500'
-  },
-  { 
-    icon: Cloud, 
-    title: 'Live Weather', 
-    desc: 'Circuit weather updates and race weekend conditions for any Grand Prix.',
-    gradient: 'from-purple-500 to-indigo-500'
-  },
-  { 
-    icon: Trophy, 
-    title: 'Standings', 
-    desc: 'Current driver and constructor standings from official F1 data.',
-    gradient: 'from-yellow-500 to-orange-500'
-  },
-  { 
-    icon: Calculator, 
-    title: 'Championship Odds', 
-    desc: 'Statistical projections for championship outcomes using Monte Carlo simulations.',
-    gradient: 'from-green-500 to-emerald-500'
-  }
-];
-
 export default function Landing({ onOpenChat, radioCheckBot }) {
   const [isVisible, setIsVisible] = useState(false);
   const [activeTeam, setActiveTeam] = useState(null);
+  const [selectedTool, setSelectedTool] = useState(null);
 
   useEffect(() => {
     setTimeout(() => setIsVisible(true), 100);
@@ -138,6 +42,14 @@ export default function Landing({ onOpenChat, radioCheckBot }) {
 
   const handleChatClick = () => {
     if (onOpenChat) onOpenChat();
+  };
+
+  const openToolModal = (tool) => {
+    setSelectedTool(tool);
+  };
+
+  const closeToolModal = () => {
+    setSelectedTool(null);
   };
 
   return (
@@ -381,8 +293,10 @@ export default function Landing({ onOpenChat, radioCheckBot }) {
                     </p>
 
                     {/* Hover Arrow */}
-                    <div className="mt-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-0 group-hover:translate-x-2"
-                         style={{ color: theme.colors.primary }}>
+                    <div 
+                      onClick={() => openToolModal(tool)}
+                      className="mt-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-0 group-hover:translate-x-2 cursor-pointer"
+                      style={{ color: theme.colors.primary }}>
                       <span className="text-sm font-bold">Learn More</span>
                       <ChevronRight className="w-4 h-4" />
                     </div>
@@ -456,6 +370,13 @@ export default function Landing({ onOpenChat, radioCheckBot }) {
           </button>
         </div>
       </section>
+
+      {/* Tool Info Card Modal */}
+      <ToolInfoCard 
+        tool={selectedTool} 
+        onClose={closeToolModal}
+        onTryNow={handleChatClick}
+      />
 
       {/* Fixed chat button removed intentionally */}
 

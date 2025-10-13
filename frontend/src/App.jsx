@@ -3,7 +3,7 @@ import './App.css'
 import Landing from './components/Landing'
 import ChatAssistant from './components/ChatAssistant'
 import { theme } from './theme'
-import radioCheckBot from './assets/radio_check.png'
+import radioCheckBot from './assets/radio_check.svg'
 
 function FloatingChatButton({ onClick }) {
   return (

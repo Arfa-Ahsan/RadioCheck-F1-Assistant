@@ -16,11 +16,12 @@ export default function ChatAssistant({ open, onClose }) {
   const [modal, setModal] = useState({ type: null, sessionId: null, titleInput: '' })
   const [me, setMe] = useState(null)
   const [avatarMenuOpen, setAvatarMenuOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const userInitial = (me?.user?.user_name || me?.user?.email || '?').charAt(0).toUpperCase()
   const suggestions = [
     'Who won the Singapore Grand Prix 2025?',
-    'Show current driver standings',
-    'What were the qualifying results last race?',
+    'Give Top 5 driver standings',
+    'Show me the highlights of Monaco GP 2024',
     'Latest constructor standings',
   ]
 
@@ -65,6 +66,20 @@ export default function ChatAssistant({ open, onClose }) {
     // If user is not logged in, do not send (UI prevents typing too)
     if (!me?.logged_in) return
     if (!input.trim()) return
+    
+    // Frontend validation for length
+    const trimmedInput = input.trim()
+    if (trimmedInput.length < 1) {
+      return
+    }
+    if (trimmedInput.length > 2000) {
+      setMessages((prev) => [...prev, { 
+        role: 'agent', 
+        content: 'Your message is too long. Please keep it under 2000 characters.' 
+      }])
+      return
+    }
+    
     let currentId = sessionId
     if (!currentId) {
       const created = await createSession()
@@ -72,7 +87,7 @@ export default function ChatAssistant({ open, onClose }) {
       setSessionId(currentId)
       await refreshSessions()
     }
-    const userMsg = { role: 'user', content: input }
+    const userMsg = { role: 'user', content: trimmedInput }
     setMessages((prev) => [...prev, userMsg])
     setInput('')
     setIsSending(true)
@@ -81,7 +96,9 @@ export default function ChatAssistant({ open, onClose }) {
       setMessages((prev) => [...prev, { role: 'agent', content: res.response }])
       await refreshSessions()
     } catch (e) {
-      setMessages((prev) => [...prev, { role: 'agent', content: 'Something went wrong. Try again.' }])
+      // Display backend error message if available
+      const errorMsg = e.response?.data?.error || 'Something went wrong. Try again.'
+      setMessages((prev) => [...prev, { role: 'agent', content: errorMsg }])
     } finally {
       setIsSending(false)
     }
@@ -139,9 +156,20 @@ export default function ChatAssistant({ open, onClose }) {
 
   return (
     <div className="fixed inset-0 flex items-end md:items-center justify-center z-50" style={{ background: 'rgba(0,0,0,0.4)' }} onClick={() => { setMenuOpenFor(null); setAvatarMenuOpen(false) }}>
-      <div className="w-full md:w-[900px] h-[80vh] md:h-[70vh] rounded-2xl overflow-hidden" style={{ background: theme.colors.chatBg, boxShadow: '0 10px 30px rgba(0,0,0,0.5)', animation: 'slideUp .25s ease' }}>
+      <div className="w-full md:w-[900px] h-[90vh] md:h-[70vh] rounded-t-2xl md:rounded-2xl overflow-hidden" style={{ background: theme.colors.chatBg, boxShadow: '0 10px 30px rgba(0,0,0,0.5)', animation: 'slideUp .25s ease' }}>
         <div className="flex items-center justify-between px-4 py-3" style={{ background: theme.colors.gray }}>
           <div className="flex items-center gap-3">
+            {/* Mobile menu button */}
+            <button 
+              onClick={(e) => { e.stopPropagation(); setSidebarOpen(!sidebarOpen) }} 
+              className="md:hidden h-8 w-8 flex items-center justify-center rounded"
+              style={{ background: '#1E1E1E', color: theme.colors.text }}
+              aria-label="Toggle menu"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M3 5h14a1 1 0 010 2H3a1 1 0 110-2zm0 4h14a1 1 0 010 2H3a1 1 0 010-2zm0 4h14a1 1 0 010 2H3a1 1 0 010-2z" />
+              </svg>
+            </button>
             <span className="text-lg font-semibold" style={{ color: theme.colors.text, fontFamily: theme.fonts.heading }}>F1 Assistant</span>
           </div>
           <div className="flex items-center gap-2">
@@ -169,8 +197,39 @@ export default function ChatAssistant({ open, onClose }) {
             </button>
           </div>
         </div>
-        <div className="flex h-[calc(100%-48px)]">
-          <aside className="w-60 hidden md:block border-r overflow-auto" style={{ borderColor: '#1f1f1f' }}>
+        <div className="flex h-[calc(100%-48px)] relative">
+          {/* Mobile Sidebar Overlay */}
+          {sidebarOpen && (
+            <div 
+              className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" 
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
+          
+          {/* Sidebar - Responsive */}
+          <aside 
+            className={`
+              fixed md:relative top-0 left-0 h-full w-64 md:w-60 
+              border-r overflow-auto z-50 md:z-auto
+              transform transition-transform duration-300 ease-in-out
+              ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+            `}
+            style={{ 
+              borderColor: '#1f1f1f', 
+              background: theme.colors.chatBg,
+              paddingTop: sidebarOpen ? '60px' : '0'  // Add padding on mobile when open to avoid header overlap
+            }}
+          >
+            {/* Close button for mobile */}
+            <button 
+              onClick={() => setSidebarOpen(false)}
+              className="md:hidden absolute top-3 right-3 h-8 w-8 rounded-full flex items-center justify-center text-xl"
+              style={{ background: theme.colors.dark, color: theme.colors.text }}
+              aria-label="Close sidebar"
+            >
+              ×
+            </button>
+            
             <div className="p-3">
               <div className="text-sm mb-2" style={{ color: theme.colors.subtext }}>Chat History</div>
               <button onClick={handleNewChatClick} className="w-full px-3 py-2 rounded" style={{ background: theme.colors.primary, color: theme.colors.text }}>
@@ -179,16 +238,27 @@ export default function ChatAssistant({ open, onClose }) {
             </div>
             <ul>
               {sessionsList.map((s) => (
-                <li key={s.session_id} className="px-3 py-2 flex items-center justify-between hover:opacity-90 relative" style={{ cursor: 'pointer', color: theme.colors.text, overflow: 'visible' }}>
-                  <span onClick={() => handleSelectSession(s.session_id)} className="truncate pr-6">{s.name}</span>
+                <li key={s.session_id} className="px-3 py-2 flex items-center justify-between hover:opacity-90 relative" style={{ cursor: 'pointer', color: theme.colors.text, position: 'relative', zIndex: menuOpenFor === s.session_id ? 100 : 1 }}>
+                  <span onClick={() => { handleSelectSession(s.session_id); setSidebarOpen(false) }} className="truncate pr-6">{s.name}</span>
                   <button aria-label="More" onClick={(e) => { e.stopPropagation(); setMenuOpenFor(menuOpenFor === s.session_id ? null : s.session_id) }} className="px-2">
                     ⋮
                   </button>
                   {menuOpenFor === s.session_id && (
-                    <div className="absolute right-2 top-8 rounded-lg text-sm" style={{ zIndex: 55, background: '#2B2B2B', color: '#FFFFFF', boxShadow: '0 10px 24px rgba(0,0,0,0.5)', border: '1px solid #3a3a3a' }} onClick={(e) => e.stopPropagation()}>
-                      <button onClick={() => handleRenameSession(s.session_id)} className="block px-4 py-2 w-full text-left hover:bg-[#1E1E1E]">Rename Chat</button>
+                    <div 
+                      className="absolute right-2 top-full mt-1 rounded-lg text-sm whitespace-nowrap" 
+                      style={{ 
+                        zIndex: 101, 
+                        background: '#2B2B2B', 
+                        color: '#FFFFFF', 
+                        boxShadow: '0 10px 24px rgba(0,0,0,0.6)', 
+                        border: '1px solid #3a3a3a',
+                        minWidth: '160px'
+                      }} 
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button onClick={() => handleRenameSession(s.session_id)} className="block px-4 py-2 w-full text-left hover:bg-[#3a3a3a] transition-colors">Rename Chat</button>
                       <div style={{ height: 1, background: '#3a3a3a' }} />
-                      <button onClick={() => setModal({ type: 'delete', sessionId: s.session_id, titleInput: '' })} className="block px-4 py-2 w-full text-left hover:bg-[#1E1E1E]" style={{ color: '#FF7A7A' }}>Delete Chat</button>
+                      <button onClick={() => setModal({ type: 'delete', sessionId: s.session_id, titleInput: '' })} className="block px-4 py-2 w-full text-left hover:bg-[#3a3a3a] transition-colors" style={{ color: '#FF7A7A' }}>Delete Chat</button>
                     </div>
                   )}
                 </li>
@@ -207,10 +277,15 @@ export default function ChatAssistant({ open, onClose }) {
                       </div>
                     ) : (
                       <>
-                        <div className="text-sm mb-3 text-center" style={{ color: theme.colors.subtext }}>Try asking:</div>
-                        <div className="flex flex-wrap gap-2 justify-center">
+                        <div className="text-sm mb-3 text-center px-4" style={{ color: theme.colors.subtext }}>Try asking:</div>
+                        <div className="flex flex-wrap gap-2 justify-center px-4 max-w-xl mx-auto">
                           {suggestions.map((s, i) => (
-                            <button key={i} onClick={() => handleSuggestionClick(s)} className="px-3 py-2 rounded-full text-sm hover:opacity-90" style={{ background: '#1E1E1E', color: theme.colors.text }}>
+                            <button 
+                              key={i} 
+                              onClick={() => handleSuggestionClick(s)} 
+                              className="px-3 py-2 rounded-full text-xs md:text-sm hover:opacity-90 transition-opacity" 
+                              style={{ background: '#1E1E1E', color: theme.colors.text }}
+                            >
                               {s}
                             </button>
                           ))}
@@ -229,13 +304,20 @@ export default function ChatAssistant({ open, onClose }) {
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter') handleSend() }}
+                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() } }}
                 placeholder={me?.logged_in ? 'Ask about F1…' : 'Sign in to start chatting'}
-                className="flex-1 px-3 py-2 rounded"
+                className="flex-1 px-3 py-2 rounded text-sm md:text-base"
                 style={{ background: '#1A1A1A', color: theme.colors.text, outline: 'none' }}
                 disabled={!me?.logged_in}
               />
-              <button onClick={handleSend} className="px-4 py-2 rounded" style={{ background: theme.colors.primary, color: theme.colors.text }} disabled={!me?.logged_in}>Send</button>
+              <button 
+                onClick={handleSend} 
+                className="px-3 md:px-4 py-2 rounded text-sm md:text-base whitespace-nowrap" 
+                style={{ background: theme.colors.primary, color: theme.colors.text }} 
+                disabled={!me?.logged_in}
+              >
+                Send
+              </button>
             </div>
           </main>
         </div>

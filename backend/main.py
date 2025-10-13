@@ -1,7 +1,8 @@
 # === Import modular agents ===
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langgraph.prebuilt import create_react_agent
-from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.mongodb import MongoDBSaver
+from pymongo import MongoClient
 from dotenv import load_dotenv
 from langchain.schema import HumanMessage, AIMessage
 import os
@@ -18,10 +19,20 @@ load_dotenv()
 # Access the keys
 google_api_key = os.getenv("GOOGLE_API_KEY")
 tavily_search_key = os.getenv("TAVILY_SEARCH_KEY")
-youtube_key=os.getenv('YOUTUBE_API_KEY')
-open_weather_key=os.getenv('OPEN_WEATHER_API_KEY')
+youtube_key = os.getenv('YOUTUBE_API_KEY')
+open_weather_key = os.getenv('OPEN_WEATHER_API_KEY')
 
-memory = MemorySaver()
+
+# MongoDB setup for persistent checkpointing
+mongo_uri = os.getenv("MONGO_URI")
+if not mongo_uri:
+    raise ValueError("MONGO_URI not found in environment variables")
+
+# Create MongoDB client and checkpointer for persistent message storage
+# This will create collections in F1_chatbot database to store conversation history
+client = MongoClient(mongo_uri)
+db = client["F1_chatbot"]
+memory = MongoDBSaver(db)
 
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.0-flash",
@@ -96,4 +107,4 @@ agent_executor = create_react_agent(
     prompt=prompt,
     checkpointer=memory
 )
-config = {"configurable": {"thread_id": "abc123"}}
+#config = {"configurable": {"thread_id": "abc123"}}

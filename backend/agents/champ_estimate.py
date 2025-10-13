@@ -19,6 +19,10 @@ def get_championship_odds(driver_name: str, total_races: int = 24, races_done: O
       total_races: total races in the season
       races_done: races completed so far
       simulations: number of Monte Carlo simulations to run (set to 0 to skip simulation)
+
+    Note: When races_done is not available from metadata, you should ask the user:
+          "How many races have been completed so far this season?" 
+          Do not assume or use outdated default values.
     """
     base_path = os.path.dirname(os.path.abspath(__file__))
     data_path = os.path.join(base_path, "..", "scraped_data", "driver_standing.json")
@@ -69,7 +73,7 @@ def get_championship_odds(driver_name: str, total_races: int = 24, races_done: O
 
     # Quick mathematical check
     if driver_points + max_points < leader_points:
-        return f"{driver['DRIVER']} has no mathematical chance of winning this season."
+        return f"Unfortunately, {driver['DRIVER']} is currently too far behind to mathematically win the championship this season, even with maximum points from all remaining races."
 
     diff = leader_points - driver_points
 
