@@ -31,7 +31,7 @@ else:
 
 
     # Save
-    output_path = "scraped_data/team_standing.json"
+    output_path = "backend/scraped_data/team_standing.json"
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
