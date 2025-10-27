@@ -1,0 +1,42 @@
+name: Weekly F1 Scraper Automation
+
+on:
+  schedule:
+    - cron: "0 0 * * 0" # every Sunday at midnight UTC
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4
+
+      - name: Run Drivers Standings Scraper
+        run: python backend/web_scraping/drivers_standing.py
+
+      - name: Run Teams Standings Scraper
+        run: python backend/web_scraping/teams_standing.py
+
+      - name: Commit and push scraped data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backend/scraped_data/*.json || echo "No files to add"
+          git commit -m "Weekly F1 data update [skip ci]" || echo "No changes to commit"
+          git push origin HEAD:${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 👈 ensures authenticated push
