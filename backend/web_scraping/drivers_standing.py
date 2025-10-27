@@ -13,7 +13,7 @@ response = requests.get(url, headers=headers)
 soup = BeautifulSoup(response.text, "html.parser")
 
 # Find the table by class
-table = soup.find("table", class_="f1-table f1-table-with-data w-full")
+table = soup.find("table", class_="Table-module_table__cKsW2")
 
 # Create output folder if it doesn't exist
 os.makedirs("scraped_data", exist_ok=True)
