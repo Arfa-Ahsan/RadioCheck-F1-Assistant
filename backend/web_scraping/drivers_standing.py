@@ -45,7 +45,7 @@ else:
                 item[key] = value.replace("\xa0", " ").strip()
 
     # --- SAVE CLEANED DATA ---
-    output_path = "scraped_data/driver_standing.json"
+    output_path = "backend/scraped_data/driver_standing.json"
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
