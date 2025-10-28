@@ -3,6 +3,7 @@ name: Weekly F1 Scraper Automation
 on:
   schedule:
     - cron: "0 0 * * 0" # every Sunday at midnight UTC
+  workflow_dispatch:
 
 jobs:
   scrape:
