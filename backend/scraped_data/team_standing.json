@@ -1,52 +1,52 @@
 [
   {
-    "POS.": "1",
-    "TEAM": "McLaren",
-    "PTS.": "650"
+    "Pos.": "1",
+    "Team": "McLaren",
+    "Pts.": "713"
   },
   {
-    "POS.": "2",
-    "TEAM": "Mercedes",
-    "PTS.": "325"
+    "Pos.": "2",
+    "Team": "Ferrari",
+    "Pts.": "356"
   },
   {
-    "POS.": "3",
-    "TEAM": "Ferrari",
-    "PTS.": "298"
+    "Pos.": "3",
+    "Team": "Mercedes",
+    "Pts.": "355"
   },
   {
-    "POS.": "4",
-    "TEAM": "Red Bull Racing",
-    "PTS.": "290"
+    "Pos.": "4",
+    "Team": "Red Bull Racing",
+    "Pts.": "346"
   },
   {
-    "POS.": "5",
-    "TEAM": "Williams",
-    "PTS.": "102"
+    "Pos.": "5",
+    "Team": "Williams",
+    "Pts.": "111"
   },
   {
-    "POS.": "6",
-    "TEAM": "Racing Bulls",
-    "PTS.": "72"
+    "Pos.": "6",
+    "Team": "Racing Bulls",
+    "Pts.": "72"
   },
   {
-    "POS.": "7",
-    "TEAM": "Aston Martin",
-    "PTS.": "68"
+    "Pos.": "7",
+    "Team": "Aston Martin",
+    "Pts.": "69"
   },
   {
-    "POS.": "8",
-    "TEAM": "Kick Sauber",
-    "PTS.": "55"
+    "Pos.": "8",
+    "Team": "Haas F1 Team",
+    "Pts.": "62"
   },
   {
-    "POS.": "9",
-    "TEAM": "Haas",
-    "PTS.": "46"
+    "Pos.": "9",
+    "Team": "Kick Sauber",
+    "Pts.": "60"
   },
   {
-    "POS.": "10",
-    "TEAM": "Alpine",
-    "PTS.": "20"
+    "Pos.": "10",
+    "Team": "Alpine",
+    "Pts.": "20"
   }
 ]

@@ -1,149 +1,170 @@
 [
   {
-    "POS.": "1",
-    "DRIVER": "Oscar Piastri",
-    "NATIONALITY": "AUS",
-    "TEAM": "McLaren",
-    "PTS.": "336"
+    "Pos.": "1",
+    "Driver": "Lando NorrisNOR",
+    "Nationality": "GBR",
+    "Team": "McLaren",
+    "Pts.": "357",
+    "DRIVER": ""
   },
   {
-    "POS.": "2",
-    "DRIVER": "Lando Norris",
-    "NATIONALITY": "GBR",
-    "TEAM": "McLaren",
-    "PTS.": "314"
+    "Pos.": "2",
+    "Driver": "Oscar PiastriPIA",
+    "Nationality": "AUS",
+    "Team": "McLaren",
+    "Pts.": "356",
+    "DRIVER": ""
   },
   {
-    "POS.": "3",
-    "DRIVER": "Max Verstappen",
-    "NATIONALITY": "NED",
-    "TEAM": "Red Bull Racing",
-    "PTS.": "273"
+    "Pos.": "3",
+    "Driver": "Max VerstappenVER",
+    "Nationality": "NED",
+    "Team": "Red Bull Racing",
+    "Pts.": "321",
+    "DRIVER": ""
   },
   {
-    "POS.": "4",
-    "DRIVER": "George Russell",
-    "NATIONALITY": "GBR",
-    "TEAM": "Mercedes",
-    "PTS.": "237"
+    "Pos.": "4",
+    "Driver": "George RussellRUS",
+    "Nationality": "GBR",
+    "Team": "Mercedes",
+    "Pts.": "258",
+    "DRIVER": ""
   },
   {
-    "POS.": "5",
-    "DRIVER": "Charles Leclerc",
-    "NATIONALITY": "MON",
-    "TEAM": "Ferrari",
-    "PTS.": "173"
+    "Pos.": "5",
+    "Driver": "Charles LeclercLEC",
+    "Nationality": "MON",
+    "Team": "Ferrari",
+    "Pts.": "210",
+    "DRIVER": ""
   },
   {
-    "POS.": "6",
-    "DRIVER": "Lewis Hamilton",
-    "NATIONALITY": "GBR",
-    "TEAM": "Ferrari",
-    "PTS.": "125"
+    "Pos.": "6",
+    "Driver": "Lewis HamiltonHAM",
+    "Nationality": "GBR",
+    "Team": "Ferrari",
+    "Pts.": "146",
+    "DRIVER": ""
   },
   {
-    "POS.": "7",
-    "DRIVER": "Kimi Antonelli",
-    "NATIONALITY": "ITA",
-    "TEAM": "Mercedes",
-    "PTS.": "88"
+    "Pos.": "7",
+    "Driver": "Kimi AntonelliANT",
+    "Nationality": "ITA",
+    "Team": "Mercedes",
+    "Pts.": "97",
+    "DRIVER": ""
   },
   {
-    "POS.": "8",
-    "DRIVER": "Alexander Albon",
-    "NATIONALITY": "THA",
-    "TEAM": "Williams",
-    "PTS.": "70"
+    "Pos.": "8",
+    "Driver": "Alexander AlbonALB",
+    "Nationality": "THA",
+    "Team": "Williams",
+    "Pts.": "73",
+    "DRIVER": ""
   },
   {
-    "POS.": "9",
-    "DRIVER": "Isack Hadjar",
-    "NATIONALITY": "FRA",
-    "TEAM": "Racing Bulls",
-    "PTS.": "39"
+    "Pos.": "9",
+    "Driver": "Nico HulkenbergHUL",
+    "Nationality": "GER",
+    "Team": "Kick Sauber",
+    "Pts.": "41",
+    "DRIVER": ""
   },
   {
-    "POS.": "10",
-    "DRIVER": "Nico Hulkenberg",
-    "NATIONALITY": "GER",
-    "TEAM": "Kick Sauber",
-    "PTS.": "37"
+    "Pos.": "10",
+    "Driver": "Isack HadjarHAD",
+    "Nationality": "FRA",
+    "Team": "Racing Bulls",
+    "Pts.": "39",
+    "DRIVER": ""
   },
   {
-    "POS.": "11",
-    "DRIVER": "Fernando Alonso",
-    "NATIONALITY": "ESP",
-    "TEAM": "Aston Martin",
-    "PTS.": "36"
+    "Pos.": "11",
+    "Driver": "Carlos SainzSAI",
+    "Nationality": "ESP",
+    "Team": "Williams",
+    "Pts.": "38",
+    "DRIVER": ""
   },
   {
-    "POS.": "12",
-    "DRIVER": "Carlos Sainz",
-    "NATIONALITY": "ESP",
-    "TEAM": "Williams",
-    "PTS.": "32"
+    "Pos.": "12",
+    "Driver": "Fernando AlonsoALO",
+    "Nationality": "ESP",
+    "Team": "Aston Martin",
+    "Pts.": "37",
+    "DRIVER": ""
   },
   {
-    "POS.": "13",
-    "DRIVER": "Lance Stroll",
-    "NATIONALITY": "CAN",
-    "TEAM": "Aston Martin",
-    "PTS.": "32"
+    "Pos.": "13",
+    "Driver": "Oliver BearmanBEA",
+    "Nationality": "GBR",
+    "Team": "Haas F1 Team",
+    "Pts.": "32",
+    "DRIVER": ""
   },
   {
-    "POS.": "14",
-    "DRIVER": "Liam Lawson",
-    "NATIONALITY": "NZL",
-    "TEAM": "Racing Bulls",
-    "PTS.": "30"
+    "Pos.": "14",
+    "Driver": "Lance StrollSTR",
+    "Nationality": "CAN",
+    "Team": "Aston Martin",
+    "Pts.": "32",
+    "DRIVER": ""
   },
   {
-    "POS.": "15",
-    "DRIVER": "Esteban Ocon",
-    "NATIONALITY": "FRA",
-    "TEAM": "Haas",
-    "PTS.": "28"
+    "Pos.": "15",
+    "Driver": "Liam LawsonLAW",
+    "Nationality": "NZL",
+    "Team": "Racing Bulls",
+    "Pts.": "30",
+    "DRIVER": ""
   },
   {
-    "POS.": "16",
-    "DRIVER": "Pierre Gasly",
-    "NATIONALITY": "FRA",
-    "TEAM": "Alpine",
-    "PTS.": "20"
+    "Pos.": "16",
+    "Driver": "Esteban OconOCO",
+    "Nationality": "FRA",
+    "Team": "Haas F1 Team",
+    "Pts.": "30",
+    "DRIVER": ""
   },
   {
-    "POS.": "17",
-    "DRIVER": "Yuki Tsunoda",
-    "NATIONALITY": "JPN",
-    "TEAM": "Red Bull Racing",
-    "PTS.": "20"
+    "Pos.": "17",
+    "Driver": "Yuki TsunodaTSU",
+    "Nationality": "JPN",
+    "Team": "Red Bull Racing",
+    "Pts.": "28",
+    "DRIVER": ""
   },
   {
-    "POS.": "18",
-    "DRIVER": "Gabriel Bortoleto",
-    "NATIONALITY": "BRA",
-    "TEAM": "Kick Sauber",
-    "PTS.": "18"
+    "Pos.": "18",
+    "Driver": "Pierre GaslyGAS",
+    "Nationality": "FRA",
+    "Team": "Alpine",
+    "Pts.": "20",
+    "DRIVER": ""
   },
   {
-    "POS.": "19",
-    "DRIVER": "Oliver Bearman",
-    "NATIONALITY": "GBR",
-    "TEAM": "Haas",
-    "PTS.": "18"
+    "Pos.": "19",
+    "Driver": "Gabriel BortoletoBOR",
+    "Nationality": "BRA",
+    "Team": "Kick Sauber",
+    "Pts.": "19",
+    "DRIVER": ""
   },
   {
-    "POS.": "20",
-    "DRIVER": "Franco Colapinto",
-    "NATIONALITY": "ARG",
-    "TEAM": "Alpine",
-    "PTS.": "0"
+    "Pos.": "20",
+    "Driver": "Franco ColapintoCOL",
+    "Nationality": "ARG",
+    "Team": "Alpine",
+    "Pts.": "0",
+    "DRIVER": ""
   },
   {
-    "POS.": "21",
-    "DRIVER": "Jack Doohan",
-    "NATIONALITY": "AUS",
-    "TEAM": "Alpine",
-    "PTS.": "0"
+    "Pos.": "21",
+    "Driver": "Jack DoohanDOO",
+    "Nationality": "AUS",
+    "Team": "Alpine",
+    "Pts.": "0",
+    "DRIVER": ""
   }
 ]
