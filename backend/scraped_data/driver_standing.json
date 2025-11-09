@@ -4,7 +4,7 @@
     "Driver": "Lando NorrisNOR",
     "Nationality": "GBR",
     "Team": "McLaren",
-    "Pts.": "357",
+    "Pts.": "365",
     "DRIVER": ""
   },
   {
@@ -20,7 +20,7 @@
     "Driver": "Max VerstappenVER",
     "Nationality": "NED",
     "Team": "Red Bull Racing",
-    "Pts.": "321",
+    "Pts.": "326",
     "DRIVER": ""
   },
   {
@@ -28,7 +28,7 @@
     "Driver": "George RussellRUS",
     "Nationality": "GBR",
     "Team": "Mercedes",
-    "Pts.": "258",
+    "Pts.": "264",
     "DRIVER": ""
   },
   {
@@ -36,7 +36,7 @@
     "Driver": "Charles LeclercLEC",
     "Nationality": "MON",
     "Team": "Ferrari",
-    "Pts.": "210",
+    "Pts.": "214",
     "DRIVER": ""
   },
   {
@@ -44,7 +44,7 @@
     "Driver": "Lewis HamiltonHAM",
     "Nationality": "GBR",
     "Team": "Ferrari",
-    "Pts.": "146",
+    "Pts.": "148",
     "DRIVER": ""
   },
   {
@@ -52,7 +52,7 @@
     "Driver": "Kimi AntonelliANT",
     "Nationality": "ITA",
     "Team": "Mercedes",
-    "Pts.": "97",
+    "Pts.": "104",
     "DRIVER": ""
   },
   {
@@ -73,6 +73,14 @@
   },
   {
     "Pos.": "10",
+    "Driver": "Fernando AlonsoALO",
+    "Nationality": "ESP",
+    "Team": "Aston Martin",
+    "Pts.": "40",
+    "DRIVER": ""
+  },
+  {
+    "Pos.": "11",
     "Driver": "Isack HadjarHAD",
     "Nationality": "FRA",
     "Team": "Racing Bulls",
@@ -80,19 +88,11 @@
     "DRIVER": ""
   },
   {
-    "Pos.": "11",
+    "Pos.": "12",
     "Driver": "Carlos SainzSAI",
     "Nationality": "ESP",
     "Team": "Williams",
     "Pts.": "38",
-    "DRIVER": ""
-  },
-  {
-    "Pos.": "12",
-    "Driver": "Fernando AlonsoALO",
-    "Nationality": "ESP",
-    "Team": "Aston Martin",
-    "Pts.": "37",
     "DRIVER": ""
   },
   {
@@ -140,7 +140,7 @@
     "Driver": "Pierre GaslyGAS",
     "Nationality": "FRA",
     "Team": "Alpine",
-    "Pts.": "20",
+    "Pts.": "21",
     "DRIVER": ""
   },
   {
