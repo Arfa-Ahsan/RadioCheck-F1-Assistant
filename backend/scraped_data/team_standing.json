@@ -2,22 +2,22 @@
   {
     "Pos.": "1",
     "Team": "McLaren",
-    "Pts.": "721"
+    "Pts.": "756"
   },
   {
     "Pos.": "2",
     "Team": "Mercedes",
-    "Pts.": "368"
+    "Pts.": "398"
   },
   {
     "Pos.": "3",
-    "Team": "Ferrari",
-    "Pts.": "362"
+    "Team": "Red Bull Racing",
+    "Pts.": "366"
   },
   {
     "Pos.": "4",
-    "Team": "Red Bull Racing",
-    "Pts.": "351"
+    "Team": "Ferrari",
+    "Pts.": "362"
   },
   {
     "Pos.": "5",
@@ -27,7 +27,7 @@
   {
     "Pos.": "6",
     "Team": "Racing Bulls",
-    "Pts.": "72"
+    "Pts.": "82"
   },
   {
     "Pos.": "7",
@@ -37,16 +37,16 @@
   {
     "Pos.": "8",
     "Team": "Haas F1 Team",
-    "Pts.": "62"
+    "Pts.": "70"
   },
   {
     "Pos.": "9",
     "Team": "Kick Sauber",
-    "Pts.": "60"
+    "Pts.": "62"
   },
   {
     "Pos.": "10",
     "Team": "Alpine",
-    "Pts.": "21"
+    "Pts.": "22"
   }
 ]
