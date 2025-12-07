@@ -4,23 +4,23 @@
     "Driver": "Lando NorrisNOR",
     "Nationality": "GBR",
     "Team": "McLaren",
-    "Pts.": "396",
+    "Pts.": "408",
     "DRIVER": ""
   },
   {
     "Pos.": "2",
-    "Driver": "Oscar PiastriPIA",
-    "Nationality": "AUS",
-    "Team": "McLaren",
-    "Pts.": "374",
+    "Driver": "Max VerstappenVER",
+    "Nationality": "NED",
+    "Team": "Red Bull Racing",
+    "Pts.": "396",
     "DRIVER": ""
   },
   {
     "Pos.": "3",
-    "Driver": "Max VerstappenVER",
-    "Nationality": "NED",
-    "Team": "Red Bull Racing",
-    "Pts.": "371",
+    "Driver": "Oscar PiastriPIA",
+    "Nationality": "AUS",
+    "Team": "McLaren",
+    "Pts.": "392",
     "DRIVER": ""
   },
   {
@@ -28,7 +28,7 @@
     "Driver": "George RussellRUS",
     "Nationality": "GBR",
     "Team": "Mercedes",
-    "Pts.": "301",
+    "Pts.": "309",
     "DRIVER": ""
   },
   {
@@ -36,7 +36,7 @@
     "Driver": "Charles LeclercLEC",
     "Nationality": "MON",
     "Team": "Ferrari",
-    "Pts.": "226",
+    "Pts.": "230",
     "DRIVER": ""
   },
   {
@@ -52,7 +52,7 @@
     "Driver": "Kimi AntonelliANT",
     "Nationality": "ITA",
     "Team": "Mercedes",
-    "Pts.": "140",
+    "Pts.": "150",
     "DRIVER": ""
   },
   {
@@ -65,6 +65,14 @@
   },
   {
     "Pos.": "9",
+    "Driver": "Carlos SainzSAI",
+    "Nationality": "ESP",
+    "Team": "Williams",
+    "Pts.": "64",
+    "DRIVER": ""
+  },
+  {
+    "Pos.": "10",
     "Driver": "Isack HadjarHAD",
     "Nationality": "FRA",
     "Team": "Racing Bulls",
@@ -72,18 +80,10 @@
     "DRIVER": ""
   },
   {
-    "Pos.": "10",
+    "Pos.": "11",
     "Driver": "Nico HulkenbergHUL",
     "Nationality": "GER",
     "Team": "Kick Sauber",
-    "Pts.": "49",
-    "DRIVER": ""
-  },
-  {
-    "Pos.": "11",
-    "Driver": "Carlos SainzSAI",
-    "Nationality": "ESP",
-    "Team": "Williams",
     "Pts.": "49",
     "DRIVER": ""
   },
@@ -92,7 +92,7 @@
     "Driver": "Fernando AlonsoALO",
     "Nationality": "ESP",
     "Team": "Aston Martin",
-    "Pts.": "42",
+    "Pts.": "48",
     "DRIVER": ""
   },
   {
@@ -108,11 +108,19 @@
     "Driver": "Liam LawsonLAW",
     "Nationality": "NZL",
     "Team": "Racing Bulls",
-    "Pts.": "36",
+    "Pts.": "38",
     "DRIVER": ""
   },
   {
     "Pos.": "15",
+    "Driver": "Yuki TsunodaTSU",
+    "Nationality": "JPN",
+    "Team": "Red Bull Racing",
+    "Pts.": "33",
+    "DRIVER": ""
+  },
+  {
+    "Pos.": "16",
     "Driver": "Esteban OconOCO",
     "Nationality": "FRA",
     "Team": "Haas F1 Team",
@@ -120,18 +128,10 @@
     "DRIVER": ""
   },
   {
-    "Pos.": "16",
+    "Pos.": "17",
     "Driver": "Lance StrollSTR",
     "Nationality": "CAN",
     "Team": "Aston Martin",
-    "Pts.": "32",
-    "DRIVER": ""
-  },
-  {
-    "Pos.": "17",
-    "Driver": "Yuki TsunodaTSU",
-    "Nationality": "JPN",
-    "Team": "Red Bull Racing",
     "Pts.": "32",
     "DRIVER": ""
   },
